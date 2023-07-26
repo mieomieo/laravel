@@ -1,14 +1,22 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Post;
+
 use Illuminate\Http\Request;
+use App\Models\Post;
 
-class POSTController extends Controller
+class PostController extends Controller
 {
-    public function create(Request $request) {
+    public function store(Request $request){
+        $validatedData = $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required',
+            'date' => 'required',
+        ]);
+        $input = $request->all();
 
+        $post = Post::create($ $validatedData);
+        return response()->json($post);
 
-       Post->save();
     }
 }
