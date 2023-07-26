@@ -2,20 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Post;
 
 class PostController extends Controller
 {
     public function store(Request $request){
-        $validatedData = $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
-            'date' => 'required',
-        ]);
-        $input = $request->all();
+  
+        $post = Post::create(['title' => 'John','content'=>"sg","date"=>124]);
 
-        $post = Post::create($ $validatedData);
+        // Return the newly created post as JSON response
         return response()->json($post);
 
     }
