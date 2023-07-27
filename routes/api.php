@@ -18,3 +18,5 @@ use App\Http\Controllers\PostController;
 //     return $request->user();
 // }); 
 Route::post('/post',[PostController::class, 'store']);
+Route::get('/posts',[PostController::class,'index']);
+Route::delete('/post/{post}',[PostController::class,'delete']);

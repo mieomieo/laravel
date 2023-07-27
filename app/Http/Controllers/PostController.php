@@ -8,12 +8,21 @@ use App\Models\Post;
 
 class PostController extends Controller
 {
+    public function index()
+    {
+        $posts = Post::all();
+        return response()->json($posts);
+    }
     public function store(Request $request){
-  
-        $post = Post::create(['title' => 'John','content'=>"sg","date"=>124]);
 
-        // Return the newly created post as JSON response
+        $input = $request->all();
+        // dd($input);
+        $post = Post::create($input);
         return response()->json($post);
-
+    }
+    public function delete($post)
+    {
+        $deletedPost = Post::find($post)->delete();
+        return response()->json($deletedPost);
     }
 }
