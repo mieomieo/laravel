@@ -16,8 +16,8 @@ function App() {
 }, []); 
   return (
     <>
-    {/* <TimelineList></TimelineList> */}
     <Provider store={store}>
+    {/* <TimelineList></TimelineList> */}
     <PostForm/>
     <Posts/>
     </Provider>
