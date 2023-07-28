@@ -132,11 +132,6 @@ const NodeItem = (props: NodeItemPropsType) => {
                 }}
             >
                 {isEditing ? (
-                    // <form
-                    //     onSubmit={(e) => {
-                    //         onSubmit(e);
-                    //     }}
-                    // >
                     <div>
                         <div>
                             Title:
@@ -176,14 +171,7 @@ const NodeItem = (props: NodeItemPropsType) => {
                             className={styles["save-btn"]}
                             onClick={() => handleEdit()}
                         >
-                            {/* <button
-                                className={styles["save-btn"]}
-                                type="submit"
-                                name="action"
-                            > */}
                             Save
-                            {/* </button> */}
-                            {/* Save */}
                         </a>
                         <a
                             className={styles["cancel-btn"]}
@@ -193,7 +181,6 @@ const NodeItem = (props: NodeItemPropsType) => {
                         </a>
                     </div>
                 ) : (
-                    // </form>
                     <div>
                         <div className={styles["item-container"]}>
                             <p>id:{props.id}</p>
