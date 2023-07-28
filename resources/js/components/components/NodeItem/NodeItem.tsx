@@ -1,14 +1,16 @@
 import { storage } from "../../fake.js";
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import styles from "../TimelineList/TimelineList.module.css";
 import { connect } from "react-redux";
 import { addPost } from "../../action/post";
+import PropTypes from "prop-types";
 
 export type NodeItemPropsType = {
     id: string;
     title: string;
     content: string;
     createAt: number;
+    addPost: ({ title, content, date, offsetY }) => void;
     handleDelete: (id: string) => void;
     offsetY: number;
     handleEdit: (id: string, payload: NodeItemPayload) => void;
@@ -19,7 +21,7 @@ export type NodeItemPayload = {
     editedDate: number | undefined;
 };
 
-const NodeItem = (props: NodeItemPropsType, { addPost }) => {
+const NodeItem = (props: NodeItemPropsType) => {
     const [isEditing, setIsEditing] = useState(true);
     const [isEditedOffsetY, setIsEditedOffsetY] = useState<boolean>(false);
     const [editedDate, setEditedDate] = useState();
@@ -40,6 +42,7 @@ const NodeItem = (props: NodeItemPropsType, { addPost }) => {
     // Function
     const handleEdit = () => {
         console.log("click btn");
+        // e.preventDefault();
         //validate
         if (editedDate) {
             setIsEditedOffsetY(true);
@@ -50,29 +53,36 @@ const NodeItem = (props: NodeItemPropsType, { addPost }) => {
             ) {
                 setEditedOffsetY((editedDate * 1000) / 1095);
                 props.handleEdit(props.id, {
-                    editedTitle,
-                    editedContent,
+                    title,
+                    content,
                     editedDate,
                 });
                 setIsEditing(false);
             } else {
                 props.handleEdit(props.id, {
-                    editedTitle,
-                    editedContent,
+                    title,
+                    content,
                     editedDate,
                 });
                 setIsEditing(false);
             }
         } else {
             props.handleEdit(props.id, {
-                editedTitle,
-                editedContent,
+                title,
+                content,
                 editedDate,
             });
             setIsEditing(false);
         }
-        addPost(formData);
-        setFormData({ title: "", content: "", date: 0, offsetY: 0 });
+        props.addPost(formData);
+        setFormData({
+            title: "",
+            content: "",
+            date: 0,
+            offsetY: 0,
+        });
+        // addPost(formData);
+        // setFormData({ title: "", content: "", date: 0, offsetY: 0 });
     };
     const handleCancel = () => {
         if (editedTitle === "" && editedContent === "") {
@@ -92,16 +102,26 @@ const NodeItem = (props: NodeItemPropsType, { addPost }) => {
         console.log(isHidenNodeItem);
     };
     const onSubmit = (e) => {
-        console.log("onsubmit");
-
-        // e.preventDefault();
-        // addPost(formData);
-        // setFormData({ title: "", content: "", date: 0, offsetY: 0 });
+        // console.log("onsubmit");
+        // console.log("formData:", formData);
+        // console.log("props:", props);
+        e.preventDefault();
+        props.addPost(formData);
+        setFormData({
+            title: "",
+            content: "",
+            date: 0,
+            offsetY: 0,
+        });
     };
     const onChange = (e) =>
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+            offsetY: props.offsetY,
+        });
     return (
-        <>
+        <Fragment>
             <li
                 className={isHidenNodeItem ? styles["li-hidden"] : ""}
                 style={{
@@ -112,77 +132,73 @@ const NodeItem = (props: NodeItemPropsType, { addPost }) => {
                 }}
             >
                 {isEditing ? (
-                    <form
-                        onSubmit={(e) => {
-                            onSubmit(e);
-                        }}
-                    >
+                    // <form
+                    //     onSubmit={(e) => {
+                    //         onSubmit(e);
+                    //     }}
+                    // >
+                    <div>
                         <div>
-                            <div>
-                                Title:
-                                <input
-                                    className={styles["edit-item"]}
-                                    type="text"
-                                    name="title"
-                                    value={title}
-                                    // onChange={(e) =>
-                                    //     setEditedTitle(e.target.value)
-                                    // }
-                                    onChange={(e) => onChange(e)}
-                                />
-                            </div>
-                            <div>
-                                Content:
-                                <input
-                                    className={styles["edit-item"]}
-                                    value={content}
-                                    name="content"
-                                    onChange={(e) => onChange(e)}
-                                    onKeyDown={handleKeyDown}
-                                />
-                            </div>
-                            <span className={styles.circle}></span>
-                            <span className={styles.line}></span>
-                            <span
-                                onKeyDown={handleKeyDown}
-                                className={styles.date}
-                            >
-                                <input
-                                    placeholder="Day: "
-                                    type="number"
-                                    onChange={(e) =>
-                                        setEditedDate(parseInt(e.target.value))
-                                    }
-                                />
-                            </span>
-                            <a
-                                className={styles["save-btn"]}
-                                onClick={() => handleEdit()}
-                            >
-                                <button
-                                    className="btn waves-effect waves-light ml-2"
-                                    type="submit"
-                                    name="action"
-                                >
-                                    Submit
-                                   
-                                </button>
-                                {/* Save */}
-                            </a>
-                            <a
-                                className={styles["cancel-btn"]}
-                                onClick={() => handleCancel()}
-                            >
-                                Cancel
-                            </a>
+                            Title:
+                            <input
+                                className={styles["edit-item"]}
+                                type="text"
+                                name="title"
+                                value={title}
+                                // onChange={(e) =>
+                                //     setEditedTitle(e.target.value)
+                                // }
+                                onChange={(e) => onChange(e)}
+                            />
                         </div>
-                    </form>
+                        <div>
+                            Content:
+                            <input
+                                className={styles["edit-item"]}
+                                value={content}
+                                name="content"
+                                onChange={(e) => onChange(e)}
+                                onKeyDown={handleKeyDown}
+                            />
+                        </div>
+                        <span className={styles.circle}></span>
+                        <span className={styles.line}></span>
+                        <span onKeyDown={handleKeyDown} className={styles.date}>
+                            <input
+                                placeholder="Day: "
+                                type="number"
+                                onChange={(e) =>
+                                    setEditedDate(parseInt(e.target.value))
+                                }
+                            />
+                        </span>
+                        <a
+                            className={styles["save-btn"]}
+                            onClick={() => handleEdit()}
+                        >
+                            {/* <button
+                                className={styles["save-btn"]}
+                                type="submit"
+                                name="action"
+                            > */}
+                            Save
+                            {/* </button> */}
+                            {/* Save */}
+                        </a>
+                        <a
+                            className={styles["cancel-btn"]}
+                            onClick={() => handleCancel()}
+                        >
+                            Cancel
+                        </a>
+                    </div>
                 ) : (
+                    // </form>
                     <div>
                         <div className={styles["item-container"]}>
                             <p>id:{props.id}</p>
-                            <h3 className={styles.title}>{props.title}</h3>
-                            <p>{props.content}</p>
+                            <h3 className={styles.title}>{title}</h3>
+                            <p>{content}</p>
                             <a onClick={() => setIsEditing(true)}>Edit &gt;</a>
                             <a
                                 onClick={() => props.handleDelete(props.id)}
@@ -205,11 +221,14 @@ const NodeItem = (props: NodeItemPropsType, { addPost }) => {
                     </div>
                 )}
             </li>
-        </>
+        </Fragment>
     );
 };
 const mapStateToProps = (state) => ({
     post: state.post,
 });
+NodeItem.propTypes = {
+    addPost: PropTypes.func.isRequired,
+};
 
 export default connect(mapStateToProps, { addPost })(NodeItem);

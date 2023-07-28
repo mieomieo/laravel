@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title',100);
             $table->string('content',100);
-            $table->integer('offsetY');
+            $table->float('offsetY');
             $table->integer('date');
             $table->timestamps();
         });

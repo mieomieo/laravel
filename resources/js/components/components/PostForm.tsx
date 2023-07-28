@@ -5,31 +5,30 @@ import { connect } from "react-redux";
 import { addPost } from "../action/post";
 
 const PostForm = ({ addPost }) => {
-    const [formData, setFormData] = useState(
-        {
-            title: "",
-            content: "",
-            date: 0,
-            offsetY: 0,
-        },
-        
-    );
-    const { title, content,date,offsetY } = formData;
+    const [formData, setFormData] = useState({
+        title: "",
+        content: "",
+        date: 0,
+        offsetY: 0,
+    });
+    const { title, content, date, offsetY } = formData;
 
-    const onChange = e =>
+    const onChange = (e) =>
         setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    const onSubmit = e => {
+    const onSubmit = (e) => {
+        // console.log(props);
+
         e.preventDefault();
         addPost(formData);
-        setFormData({ title:'', content:'',  date:0 , offsetY:0  });
+        setFormData({ title: "", content: "", date: 0, offsetY: 0 });
     };
 
     return (
         <Fragment>
             <div className="mb-5">
                 <form
-                    onSubmit={e => {
+                    onSubmit={(e) => {
                         onSubmit(e);
                     }}
                 >
@@ -44,7 +43,7 @@ const PostForm = ({ addPost }) => {
                                 className="validate"
                                 name="title"
                                 value={title}
-                                onChange={e => onChange(e)}
+                                onChange={(e) => onChange(e)}
                             />
                             <label htmlFor="icon_prefix">Enter your Name</label>
                         </div>
@@ -56,30 +55,29 @@ const PostForm = ({ addPost }) => {
                                 className="materialize-textarea"
                                 name="content"
                                 value={content}
-                                onChange={e => onChange(e)}
+                                onChange={(e) => onChange(e)}
                             ></textarea>
 
                             <label htmlFor="textarea1">Enter a Post...</label>
-                        
                         </div>
                         <div>
-                        <input
+                            <input
                                 id="icon_prefix"
                                 type="number"
                                 className="validate"
                                 name="date"
                                 value={date}
-                                onChange={e => onChange(e)}
+                                onChange={(e) => onChange(e)}
                             />
                         </div>
                         <div>
-                        <input
+                            <input
                                 id="icon_prefix"
                                 type="number"
                                 className="validate"
                                 name="offsetY"
                                 value={offsetY}
-                                onChange={e => onChange(e)}
+                                onChange={(e) => onChange(e)}
                             />
                         </div>
                     </div>
@@ -97,7 +95,7 @@ const PostForm = ({ addPost }) => {
     );
 };
 PostForm.propTypes = {
-    addPost: PropTypes.func.isRequired
+    addPost: PropTypes.func.isRequired,
 };
 
 export default connect(null, { addPost })(PostForm);
