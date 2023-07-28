@@ -3,26 +3,25 @@ import { connect } from "react-redux";
 import { deletePost } from "../../action/post";
 import PropTypes from "prop-types";
 
-// const PostItem = ({post:{title,content,date,offsetY},deletePost}) => {
-const PostItem = (props) => {
- 
+const PostItem = ({post:{id,title,content,date,offsetY},deletePost}) => {
+// const PostItem = (props) => {
+    // console.log(props);
+    
     return (
         <Fragment>
             <div>
                 <ul className="collection mx-3">
                     <li className="collection-item avatar">
                         {/* <i className="material-icons circle">person_outline</i> */}
-                        <span className="title">{props.post.title}</span>
-                        <p>{props.post.content}</p>
-                        <p>{props.post.date}</p>
-                        <p>{props.post.offsetY}</p>
+                        <span className="title">{title}</span>
+                        <p>{content}</p>
+                        <p>{date}</p>
+                        <p>{offsetY}</p>
 
                         <a
                             className="secondary-content waves-effect waves-light  red darken-3 btn"
                         onClick={()=>{
-                            console.log('aaa');
-                            
-                            deletePost(props.post.id)
+                            deletePost(id);
                         }}
                         >
                             <i className="material-icons left">

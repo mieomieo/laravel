@@ -1,4 +1,4 @@
-import TimelineList from './components/TimelineList/TimelineList'
+import TimelineList from './components/timelineList/TimelineList'
 
 import React, { useState,useEffect } from 'react';
 import PostForm from './components/PostForm';
@@ -17,7 +17,7 @@ function App() {
   return (
     <>
     <Provider store={store}>
-    {/* <TimelineList></TimelineList> */}
+    <TimelineList></TimelineList>
     <PostForm/>
     <Posts/>
     </Provider>

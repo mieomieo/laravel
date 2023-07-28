@@ -1,6 +1,6 @@
-import { storage } from "../../fake.ts";
+import { storage } from "../../fake.js";
 import React, { useState } from "react";
-import styles from "../TimelineList/TimelineList.module.css";
+import styles from "../timelineList/TimelineList.module.css";
 
 export type NodeItemPropsType = {
   id: string;

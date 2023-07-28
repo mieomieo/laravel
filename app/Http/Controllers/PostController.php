@@ -14,7 +14,7 @@ class PostController extends Controller
         return response()->json($posts);
     }
     public function store(Request $request){
-        dd($request);
+        // dd($request);
         $input = $request->all();
         // dd($input);
         $post = Post::create($input);

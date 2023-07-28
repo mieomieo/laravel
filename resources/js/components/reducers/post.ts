@@ -2,8 +2,8 @@ import {GET_POSTS,POST_ERROR, ADD_POST, DELETE_POST} from '../action/type';
 
 const initialState = {
     posts: [],
-    loading:true,
-    error:{}
+    // loading:true,
+    // error:{}
 }
 
 export default function(state=initialState,action)
@@ -16,19 +16,19 @@ export default function(state=initialState,action)
         return{
             ...state,
             posts:payload,
-            loading:false
+            // loading:false
         }
         case ADD_POST:
             return{
                 ...state,
-                posts: [payload,...state.posts],
-                loading:false
+                posts: [...state.posts,payload],
+                // loading:false
             }
         case DELETE_POST:
             return{
                 ...state,
                 posts: state.posts.filter(post => post.id!== payload),
-                loading:false
+                // loading:false
             }
         default:
             return state;
