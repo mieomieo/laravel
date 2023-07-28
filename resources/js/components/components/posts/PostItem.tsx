@@ -9,7 +9,7 @@ const PostItem = ({post:{id,title,content,date,offsetY},deletePost}) => {
     
     return (
         <Fragment>
-            <div>
+            <div style={{margin:'10px'}}>
                 <ul className="collection mx-3">
                     <li className="collection-item avatar">
                         {/* <i className="material-icons circle">person_outline</i> */}

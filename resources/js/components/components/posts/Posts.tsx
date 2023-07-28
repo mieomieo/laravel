@@ -8,7 +8,7 @@ const Posts = ({post: {posts}})=> {
     // useEffect(() => {
     //     getPosts();        
     // }, [getPosts])
-    console.log("posts:",posts);
+    // console.log("posts:",posts);
 
     
     

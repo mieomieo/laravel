@@ -1,4 +1,4 @@
-import TimelineList from './components/timelineList/TimelineList'
+import TimelineList from './components/TimelineList/TimelineList'
 
 import React, { useState,useEffect } from 'react';
 import PostForm from './components/PostForm';
@@ -11,7 +11,7 @@ import './App.css'
 function App() {
   useEffect(() => {
     store.dispatch(getPosts());
-   console.log('render App');
+  //  console.log('render App');
     
 }, []); 
   return (
