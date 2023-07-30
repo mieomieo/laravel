@@ -14,14 +14,17 @@ export type NodeItemPropsType = {
     handleDelete: (id: string) => void;
     offsetY: number;
     handleEdit: (id: string, payload: NodeItemPayload) => void;
+    post: { payload: NodeItemPayload };
 };
 export type NodeItemPayload = {
     editedTitle: string;
+    handleEdit;
     editedContent: string;
     editedDate: number | undefined;
 };
 
-const NodeItem = (props: NodeItemPropsType) => {
+const NodeItem = (props) => {
+    // const { addPost, post } = props;
     const [isEditing, setIsEditing] = useState(true);
     const [isEditedOffsetY, setIsEditedOffsetY] = useState<boolean>(false);
     const [editedDate, setEditedDate] = useState();
@@ -41,8 +44,8 @@ const NodeItem = (props: NodeItemPropsType) => {
 
     // Function
     const handleEdit = () => {
-        console.log("click btn");
-        // e.preventDefault();
+        // console.log("click btn");
+        console.log("props:", props);
         //validate
         if (editedDate) {
             setIsEditedOffsetY(true);
@@ -102,9 +105,6 @@ const NodeItem = (props: NodeItemPropsType) => {
         console.log(isHidenNodeItem);
     };
     const onSubmit = (e) => {
-        // console.log("onsubmit");
-        // console.log("formData:", formData);
-        // console.log("props:", props);
         e.preventDefault();
         props.addPost(formData);
         setFormData({
@@ -184,8 +184,8 @@ const NodeItem = (props: NodeItemPropsType) => {
                     <div>
                         <div className={styles["item-container"]}>
                             <p>id:{props.id}</p>
-                            <h3 className={styles.title}>{title}</h3>
-                            <p>{content}</p>
+                            <h3 className={styles.title}>{props.title}</h3>
+                            <p>{props.content}</p>
                             <a onClick={() => setIsEditing(true)}>Edit &gt;</a>
                             <a
                                 onClick={() => props.handleDelete(props.id)}

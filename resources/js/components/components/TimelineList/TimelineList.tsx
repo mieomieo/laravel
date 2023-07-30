@@ -3,20 +3,16 @@ import { storage } from "../../fake";
 import React, { useEffect, useState, MouseEventHandler, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import NodeItem, { NodeItemPayload } from "../NodeItem/NodeItem";
+import { connect } from "react-redux";
 
-type EventItem = {
-    title: string;
-    content: string;
-    offsetY: number;
-    isCollapse: boolean;
-};
+function TimelineList({ post: { posts } }) {
+    const [lists, setLists] = useState(posts);
+    useEffect(() => {
+        setLists(posts);
+    }, [posts]);
+    // console.log("lists:", lists);
 
-function TimelineList() {
-    const listTmp: EventItem[] = [];
-    const [lists, setLists] = useState(storage);
     const [heightOfTimeLine, setHeightOfTimeLine] = useState(1000);
-    const [isClicked, setIsClicked] = useState(false);
-    const [listEventItem, setListEventItem] = useState(listTmp);
 
     //useRef
     const timeLineRef = useRef<HTMLDivElement>(null);
@@ -29,32 +25,27 @@ function TimelineList() {
     const handleChooseTimeline: MouseEventHandler<HTMLDivElement> = (e) => {
         let topOfTimeLine: number | null = null; // Khai báo biến ở ngoài khối if
         if (timeLineRef.current) {
-          topOfTimeLine = timeLineRef.current.getBoundingClientRect().top;
+            topOfTimeLine = timeLineRef.current.getBoundingClientRect().top;
         }
         const y = e.clientY - (topOfTimeLine !== null ? topOfTimeLine : 0);
-        // console.log("clientY:", e.clientY);
-        // console.log("Y:", y);
-
         const offSetHeightOfTarget = e.currentTarget.offsetHeight;
         const logPercent = Math.floor((y / offSetHeightOfTarget) * 100);
-        // console.log("value: ", `${logPercent} %`);
         const day = Math.floor((1095 * logPercent) / 100);
-
         setLists((prev) => [
             ...prev,
             {
-                id: uuidv4(),
-                title: "..aaaa.",
-                content: "ababbb",
+                // id: uuidv4(),
+                title: "",
+                content: "",
                 createAt: day,
                 offsetY: y,
             },
         ]);
         // console.log("Array:", lists);
     };
-    useEffect(() => {
-        console.log("Array:", lists);
-    }, [lists]);
+    // useEffect(() => {
+    //     console.log("Array:", lists);
+    // }, [lists]);
     const handleEdit = (id: string, payload: NodeItemPayload) => {
         const index = lists.findIndex((item) => item.id === id);
         const newArr = [...lists];
@@ -81,6 +72,7 @@ function TimelineList() {
                                 handleDelete={handleDelete}
                                 offsetY={item.offsetY}
                                 handleEdit={handleEdit}
+                                // post={post}
                             />
                         ))}
                     </ul>
@@ -97,4 +89,8 @@ function TimelineList() {
         </>
     );
 }
-export default TimelineList;
+
+const mapStateToProps = (state) => ({
+    post: state.post,
+});
+export default connect(mapStateToProps)(TimelineList);
