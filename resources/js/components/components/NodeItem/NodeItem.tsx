@@ -2,95 +2,93 @@ import { storage } from "../../fake.js";
 import React, { useState, Fragment } from "react";
 import styles from "../TimelineList/TimelineList.module.css";
 import { connect } from "react-redux";
-import { addPost } from "../../action/post";
+import { addPost,deletePost } from "../../action/post";
 import PropTypes from "prop-types";
 
 export type NodeItemPropsType = {
+
     id: string;
     title: string;
     content: string;
     createAt: number;
-    addPost: ({ title, content, date, offsetY }) => void;
-    handleDelete: (id: string) => void;
     offsetY: number;
-    handleEdit: (id: string, payload: NodeItemPayload) => void;
-    post: { payload: NodeItemPayload };
 };
 export type NodeItemPayload = {
     editedTitle: string;
     handleEdit;
     editedContent: string;
     editedDate: number | undefined;
+    editedOffsetY:number | undefined
 };
 
 const NodeItem = (props) => {
-    // const { addPost, post } = props;
+    console.log("item props:", props);
+    
+    const { addPost, deletePost,id,content,title,offsetY } = props;
     const [isEditing, setIsEditing] = useState(true);
     const [isEditedOffsetY, setIsEditedOffsetY] = useState<boolean>(false);
-    const [editedDate, setEditedDate] = useState();
-    const [editedOffsetY, setEditedOffsetY] = useState<number>(0);
     const [isHidenNodeItem, setIsHidenNodeItem] = useState<boolean>(false);
 
-    const [editedTitle, setEditedTitle] = useState("");
-    const [editedContent, setEditedContent] = useState("");
-
     const [formData, setFormData] = useState({
-        title: "",
-        content: "",
-        date: 0,
-        offsetY: 0,
+        editedTitle: "",
+        editedContent: "",
+        editedDate: undefined,
+        editedOffsetY: undefined,
     });
-    const { title, content, date, offsetY } = formData;
-
+    const { editedTitle, editedContent, editedDate, editedOffsetY } = formData;
+    const handleEdit = (e)=>{
+        e.preventDefault();
+        addPost(formData);
+        setFormData({ editedTitle: "", editedContent: "", editedDate: 0, editedOffsetY: 0 });
+    }
     // Function
-    const handleEdit = () => {
-        // console.log("click btn");
-        console.log("props:", props);
-        //validate
-        if (editedDate) {
-            setIsEditedOffsetY(true);
-            if (
-                editedDate > 0 &&
-                editedDate < 1095 &&
-                editedDate != undefined
-            ) {
-                setEditedOffsetY((editedDate * 1000) / 1095);
-                props.handleEdit(props.id, {
-                    title,
-                    content,
-                    editedDate,
-                });
-                setIsEditing(false);
-            } else {
-                props.handleEdit(props.id, {
-                    title,
-                    content,
-                    editedDate,
-                });
-                setIsEditing(false);
-            }
-        } else {
-            props.handleEdit(props.id, {
-                title,
-                content,
-                editedDate,
-            });
-            setIsEditing(false);
-        }
-        props.addPost(formData);
-        setFormData({
-            title: "",
-            content: "",
-            date: 0,
-            offsetY: 0,
-        });
-        // addPost(formData);
-        // setFormData({ title: "", content: "", date: 0, offsetY: 0 });
-    };
+    // const abc = () => {
+
+    //     //validate
+    //     if (editedDate) {
+    //         setIsEditedOffsetY(true);
+    //         if (
+    //             editedDate > 0 &&
+    //             editedDate < 1095 &&
+    //             editedDate != undefined
+    //         ) {
+    //             setEditedOffsetY((editedDate * 1000) / 1095);
+    //             props.handleEdit(props.id, {
+    //                 title,
+    //                 content,
+    //                 editedDate,
+    //             });
+    //             setIsEditing(false);
+    //         } else {
+    //             props.handleEdit(props.id, {
+    //                 title,
+    //                 content,
+    //                 editedDate,
+    //             });
+    //             setIsEditing(false);
+    //         }
+    //     } else {
+    //         props.handleEdit(props.id, {
+    //             title,
+    //             content,
+    //             editedDate,
+    //         });
+    //         setIsEditing(false);
+    //     }
+    //     props.addPost(formData);
+    //     setFormData({
+    //         title: "",
+    //         content: "",
+    //         date: 0,
+    //         offsetY: 0,
+    //     });
+    //     addPost(formData);
+    //     setFormData({ title: "", content: "", date: 0, offsetY: 0 });
+    // };
     const handleCancel = () => {
         if (editedTitle === "" && editedContent === "") {
             console.log("click cancel");
-            props.handleDelete(props.id);
+            deletePost(props.id);
         } else {
             setIsEditing(false);
         }
@@ -118,7 +116,7 @@ const NodeItem = (props) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
-            offsetY: props.offsetY,
+            // offsetY: props.offsetY,
         });
     return (
         <Fragment>
@@ -169,13 +167,15 @@ const NodeItem = (props) => {
                         </span>
                         <a
                             className={styles["save-btn"]}
-                            onClick={() => handleEdit()}
+                            //  onClick={handleEdit}
                         >
                             Save
                         </a>
                         <a
                             className={styles["cancel-btn"]}
-                            onClick={() => handleCancel()}
+                            onClick={()=>{
+                                deletePost(id)
+                            }}
                         >
                             Cancel
                         </a>
@@ -218,4 +218,4 @@ NodeItem.propTypes = {
     addPost: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, { addPost })(NodeItem);
+export default connect(null, { addPost,deletePost })(NodeItem);

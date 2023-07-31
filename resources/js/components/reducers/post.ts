@@ -1,4 +1,4 @@
-import {GET_POSTS,POST_ERROR, ADD_POST, DELETE_POST} from '../action/type';
+import {GET_POSTS,POST_ERROR, ADD_POST, DELETE_POST,UPDATE_POST} from '../action/type';
 
 const initialState = {
     posts: [],
@@ -29,6 +29,10 @@ export default function(state=initialState,action)
                 ...state,
                 posts: state.posts.filter(post => post.id!== payload),
                 // loading:false
+            }
+        case UPDATE_POST:
+            return {
+
             }
         default:
             return state;

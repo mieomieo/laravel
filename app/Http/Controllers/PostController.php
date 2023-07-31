@@ -25,4 +25,17 @@ class PostController extends Controller
         $deletedPost = Post::find($post)->delete();
         return response()->json($deletedPost);
     }
+    public function update($itemId, $updatedPost)
+    {
+        $item = Post::find($itemId);
+        
+        if (!$item) {
+            return response()->json(['message' => 'item not found'], 404);
+        }
+        
+        $item = $updatedPost;
+        $item->save();
+
+        return response()->json($item);
+    }
 }

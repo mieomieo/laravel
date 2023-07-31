@@ -1,5 +1,5 @@
 import axios from "axios";
-import  {GET_POSTS,POST_ERROR,ADD_POST, DELETE_POST} from "./type";
+import  {GET_POSTS,POST_ERROR,ADD_POST, DELETE_POST,UPDATE_POST} from "./type";
 
 export const getPosts = () => async dispatch => 
 {
@@ -61,6 +61,25 @@ export const deletePost = postId => async dispatch =>
             payload:{
                 msg:err.response.statusText,
                 status:err.response.status
+            }
+        })
+    }
+}
+// update post
+
+export const updatePost = (postId,updatedPost) => async dispatch => {
+    try {
+        await axios.put(`/api/post/${postId}/${updatedPost}`)
+        dispatch({
+            type: UPDATE_POST,
+            payload:{postId,updatedPost}
+        })
+    } catch (error) {
+        dispatch({
+            type:POST_ERROR,
+            payload:{
+                msg:error.response.statusText,
+                status:error.response.status
             }
         })
     }
