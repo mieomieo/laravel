@@ -28,12 +28,19 @@ class PostController extends Controller
     public function update($postId, Request $request)
     {
         $item = Post::find($postId);
-        
+
         if (!$item) {
             return response()->json(['message' => 'item not found'], 404);
         }
-        
-        $item = $updatedPost;
+
+        $validatedData = $request->validate([
+        'editedTitle' => 'required|string|max:255',
+        'editedContent' => 'required|string',
+
+        // Các trường dữ liệu khác cần được xác thực nếu có
+        ]);
+        $item->title = $validatedData['editedTitle'];
+        $item->content = $validatedData['editedContent'];
         $item->save();
 
         return response()->json($item);

@@ -4,25 +4,29 @@ import React, { useEffect, useState, MouseEventHandler, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import NodeItem, { NodeItemPayload } from "../NodeItem/NodeItem";
 import { connect } from "react-redux";
-import { addPost,deletePost,getPosts } from "../../action/post";
+import { addPost, deletePost, getPosts } from "../../action/post";
 import PropTypes from "prop-types";
-
 
 // function TimelineList({ post: { posts }, addPost }) {
 function TimelineList(props) {
-    const {addPost,deletePost,getPosts,post:{posts}} = props;
-    useEffect(() => {
-        getPosts();
-    }, [getPosts])
-    // console.log(props);/
+    // useEffect(() => {
+    //     console.log("render");
+
+    //     getPosts();
+    // }, [posts]);
+    const { addPost, deletePost, getPosts } = props;
+    const { posts } = props.post;
+
+    console.log("re-render:", posts);
     const [heightOfTimeLine, setHeightOfTimeLine] = useState(1000);
     //useRef
     const timeLineRef = useRef<HTMLDivElement>(null);
 
-
-    const handleChooseTimeline: MouseEventHandler<HTMLDivElement> = async (e) => {
+    const handleChooseTimeline: MouseEventHandler<HTMLDivElement> = async (
+        e
+    ) => {
         e.preventDefault();
-    
+
         let topOfTimeLine: number | null = null; // Khai báo biến ở ngoài khối if
         if (timeLineRef.current) {
             topOfTimeLine = timeLineRef.current.getBoundingClientRect().top;
@@ -31,15 +35,10 @@ function TimelineList(props) {
         const offSetHeightOfTarget = e.currentTarget.offsetHeight;
         const logPercent = Math.floor((y / offSetHeightOfTarget) * 100);
         const day = Math.floor((1095 * logPercent) / 100);
-        
-        await addPost({ title: "3",
-         content: "aa",
-         date: day,
-         offsetY: y,});
-         console.log("await");
-         
-    };
 
+        await addPost({ title: "3", content: "aa", date: day, offsetY: y });
+        console.log("await");
+    };
 
     return (
         <>
@@ -50,10 +49,12 @@ function TimelineList(props) {
                         {posts.map((item) => (
                             <NodeItem
                                 key={item.id}
-                                id={item.id}
-                                title={item.title}
-                                content={item.content}
-                                offsetY={item.offsetY}
+                                data={{
+                                    id: item.id,
+                                    title: item.title,
+                                    content: item.content,
+                                    offsetY: item.offsetY,
+                                }}
                             />
                         ))}
                     </ul>
@@ -76,4 +77,4 @@ TimelineList.propTypes = {
 const mapStateToProps = (state) => ({
     post: state.post,
 });
-export default connect(mapStateToProps, { addPost,getPosts })(TimelineList);
+export default connect(mapStateToProps, { addPost, getPosts })(TimelineList);

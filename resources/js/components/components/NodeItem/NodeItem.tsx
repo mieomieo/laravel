@@ -1,29 +1,32 @@
 import { storage } from "../../fake.js";
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import styles from "../TimelineList/TimelineList.module.css";
 import { connect } from "react-redux";
-import { addPost, deletePost,updatePost } from "../../action/post";
+import { getPosts, addPost, deletePost, updatePost } from "../../action/post";
 import PropTypes from "prop-types";
 
 export type NodeItemPropsType = {
-    id: number;
-    title: string;
-    content: string;
-    createAt: number;
-    offsetY: number;
+    data: {
+        id: number;
+        title: string;
+        content: string;
+        createAt: number;
+        offsetY: number;
+    };
 };
-export type NodeItemPayload = {
-    editedTitle: string;
-    handleEdit;
-    editedContent: string;
-    editedDate: number | undefined;
-    editedOffsetY: number | undefined;
-};
+// export type NodeItemPayload = {
+//     editedTitle: string;
+//     handleEdit;
+//     editedContent: string;
+//     editedDate: number | undefined;
+//     editedOffsetY: number | undefined;
+// };
 
-const NodeItem  = (props) => {
-    console.log("item props:", props);
+const NodeItem = (props) => {
+    // console.log("item props:", props);
 
-    const { addPost, deletePost, id, content, title, offsetY } = props;
+    const { updatePost, addPost, deletePost } = props;
+    const { id, content, title, offsetY } = props.data;
     const [isEditing, setIsEditing] = useState(true);
     const [isEditedOffsetY, setIsEditedOffsetY] = useState<boolean>(false);
     const [isHidenNodeItem, setIsHidenNodeItem] = useState<boolean>(false);
@@ -34,11 +37,20 @@ const NodeItem  = (props) => {
         editedDate: undefined,
         editedOffsetY: undefined,
     });
+    // useEffect(() => {
+    //     console.log("run get post");
+
+    //     getPosts();
+    // }, [getPosts]);
     const { editedTitle, editedContent, editedDate, editedOffsetY } = formData;
-    const handleEdit = async (e) => {
+    const handleEdit = (e) => {
         e.preventDefault();
-        await updatePost({id,formData})
-        setIsEditing(false)
+        console.log("formData:", formData);
+
+        updatePost(id, formData);
+        console.log("await update");
+
+        setIsEditing(false);
     };
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
         if (e.key === "Enter") {
@@ -49,12 +61,11 @@ const NodeItem  = (props) => {
         setIsHidenNodeItem(!isHidenNodeItem);
         console.log(isHidenNodeItem);
     };
-    
+
     const onChange = (e) =>
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
-    
         });
     return (
         <Fragment>
@@ -64,7 +75,7 @@ const NodeItem  = (props) => {
                     marginTop:
                         isEditedOffsetY == true
                             ? `${editedOffsetY}px`
-                            : `${props.offsetY}px`,
+                            : `${offsetY}px`,
                 }}
             >
                 {isEditing ? (
@@ -103,10 +114,7 @@ const NodeItem  = (props) => {
                                 // }
                             />
                         </span>
-                        <a
-                            className={styles["save-btn"]}
-                             onClick={handleEdit}
-                        >
+                        <a className={styles["save-btn"]} onClick={handleEdit}>
                             Save
                         </a>
                         <a
@@ -122,9 +130,9 @@ const NodeItem  = (props) => {
                 ) : (
                     <div>
                         <div className={styles["item-container"]}>
-                            <p>id:{props.id}</p>
-                            <h3 className={styles.title}>{props.title}</h3>
-                            <p>{props.content}</p>
+                            {/* <p>id:{props.id}</p> */}
+                            <h3 className={styles.title}>{title}</h3>
+                            <p>{content}</p>
                             <a onClick={() => setIsEditing(true)}>Edit &gt;</a>
                             <a
                                 onClick={async (e) => {
@@ -160,4 +168,4 @@ NodeItem.propTypes = {
     addPost: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addPost, deletePost,updatePost })(NodeItem);
+export default connect(null, { addPost, deletePost, updatePost })(NodeItem);
