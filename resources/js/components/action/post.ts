@@ -67,7 +67,7 @@ export const deletePost = postId => async dispatch =>
 }
 // update post
 
-export const updatePost = (postId,updatedPost) => async dispatch => {
+export const updatePost = ({postId,updatedPost}) => async dispatch => {
     try {
         await axios.put(`/api/post/${postId}/${updatedPost}`)
         dispatch({

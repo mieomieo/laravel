@@ -20,14 +20,14 @@ class PostController extends Controller
         $post = Post::create($input);
         return response()->json($post);
     }
-    public function delete($post)
+    public function delete($postId)
     {
-        $deletedPost = Post::find($post)->delete();
+        $deletedPost = Post::find($postId)->delete();
         return response()->json($deletedPost);
     }
-    public function update($itemId, $updatedPost)
+    public function update($postId, Request $request)
     {
-        $item = Post::find($itemId);
+        $item = Post::find($postId);
         
         if (!$item) {
             return response()->json(['message' => 'item not found'], 404);

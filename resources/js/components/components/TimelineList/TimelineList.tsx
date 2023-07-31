@@ -11,18 +11,18 @@ import PropTypes from "prop-types";
 // function TimelineList({ post: { posts }, addPost }) {
 function TimelineList(props) {
     const {addPost,deletePost,getPosts,post:{posts}} = props;
-    // useEffect(() => {
-    //     getPosts();
-    // }, [getPosts])
-    // console.log(props);
+    useEffect(() => {
+        getPosts();
+    }, [getPosts])
+    // console.log(props);/
     const [heightOfTimeLine, setHeightOfTimeLine] = useState(1000);
     //useRef
     const timeLineRef = useRef<HTMLDivElement>(null);
 
 
-    const handleChooseTimeline: MouseEventHandler<HTMLDivElement> = (e) => {
+    const handleChooseTimeline: MouseEventHandler<HTMLDivElement> = async (e) => {
         e.preventDefault();
-        console.log("click time line");
+    
         let topOfTimeLine: number | null = null; // Khai báo biến ở ngoài khối if
         if (timeLineRef.current) {
             topOfTimeLine = timeLineRef.current.getBoundingClientRect().top;
@@ -31,24 +31,16 @@ function TimelineList(props) {
         const offSetHeightOfTarget = e.currentTarget.offsetHeight;
         const logPercent = Math.floor((y / offSetHeightOfTarget) * 100);
         const day = Math.floor((1095 * logPercent) / 100);
-        console.log(day);
         
-        addPost({ title: "aaaa",
+        await addPost({ title: "3",
          content: "aa",
          date: day,
          offsetY: y,});
+         console.log("await");
+         
     };
 
-    const handleEdit = (id: string, payload: NodeItemPayload) => {
-        // const index = lists.findIndex((item) => item.id === id);
-        // const newArr = [...lists];
-        // newArr[index].title = payload.editedTitle;
-        // newArr[index].content = payload.editedContent;
-        // if (payload.editedDate !== undefined) {
-        //     newArr[index].createAt = payload.editedDate;
-        // }
-        // setLists(newArr);
-    };
+
     return (
         <>
             <div className={styles.main}>
@@ -57,16 +49,11 @@ function TimelineList(props) {
                     <ul>
                         {posts.map((item) => (
                             <NodeItem
-                              
                                 key={item.id}
                                 id={item.id}
                                 title={item.title}
                                 content={item.content}
-                                // createAt={item.createAt}
-                                // handleDelete={handleDelete}
                                 offsetY={item.offsetY}
-                                // handleEdit={handleEdit}
-                                // post={post}
                             />
                         ))}
                     </ul>
@@ -89,4 +76,4 @@ TimelineList.propTypes = {
 const mapStateToProps = (state) => ({
     post: state.post,
 });
-export default connect(mapStateToProps, { addPost,deletePost,getPosts })(TimelineList);
+export default connect(mapStateToProps, { addPost,getPosts })(TimelineList);

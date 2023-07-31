@@ -31,6 +31,8 @@ export default function(state=initialState,action)
                 // loading:false
             }
         case UPDATE_POST:
+            
+        
             return {
 
             }

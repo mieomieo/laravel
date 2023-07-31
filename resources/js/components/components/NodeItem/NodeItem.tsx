@@ -2,12 +2,11 @@ import { storage } from "../../fake.js";
 import React, { useState, Fragment } from "react";
 import styles from "../TimelineList/TimelineList.module.css";
 import { connect } from "react-redux";
-import { addPost,deletePost } from "../../action/post";
+import { addPost, deletePost,updatePost } from "../../action/post";
 import PropTypes from "prop-types";
 
 export type NodeItemPropsType = {
-
-    id: string;
+    id: number;
     title: string;
     content: string;
     createAt: number;
@@ -18,13 +17,13 @@ export type NodeItemPayload = {
     handleEdit;
     editedContent: string;
     editedDate: number | undefined;
-    editedOffsetY:number | undefined
+    editedOffsetY: number | undefined;
 };
 
-const NodeItem = (props) => {
+const NodeItem  = (props) => {
     console.log("item props:", props);
-    
-    const { addPost, deletePost,id,content,title,offsetY } = props;
+
+    const { addPost, deletePost, id, content, title, offsetY } = props;
     const [isEditing, setIsEditing] = useState(true);
     const [isEditedOffsetY, setIsEditedOffsetY] = useState<boolean>(false);
     const [isHidenNodeItem, setIsHidenNodeItem] = useState<boolean>(false);
@@ -36,87 +35,26 @@ const NodeItem = (props) => {
         editedOffsetY: undefined,
     });
     const { editedTitle, editedContent, editedDate, editedOffsetY } = formData;
-    const handleEdit = (e)=>{
+    const handleEdit = async (e) => {
         e.preventDefault();
-        addPost(formData);
-        setFormData({ editedTitle: "", editedContent: "", editedDate: 0, editedOffsetY: 0 });
-    }
-    // Function
-    // const abc = () => {
-
-    //     //validate
-    //     if (editedDate) {
-    //         setIsEditedOffsetY(true);
-    //         if (
-    //             editedDate > 0 &&
-    //             editedDate < 1095 &&
-    //             editedDate != undefined
-    //         ) {
-    //             setEditedOffsetY((editedDate * 1000) / 1095);
-    //             props.handleEdit(props.id, {
-    //                 title,
-    //                 content,
-    //                 editedDate,
-    //             });
-    //             setIsEditing(false);
-    //         } else {
-    //             props.handleEdit(props.id, {
-    //                 title,
-    //                 content,
-    //                 editedDate,
-    //             });
-    //             setIsEditing(false);
-    //         }
-    //     } else {
-    //         props.handleEdit(props.id, {
-    //             title,
-    //             content,
-    //             editedDate,
-    //         });
-    //         setIsEditing(false);
-    //     }
-    //     props.addPost(formData);
-    //     setFormData({
-    //         title: "",
-    //         content: "",
-    //         date: 0,
-    //         offsetY: 0,
-    //     });
-    //     addPost(formData);
-    //     setFormData({ title: "", content: "", date: 0, offsetY: 0 });
-    // };
-    const handleCancel = () => {
-        if (editedTitle === "" && editedContent === "") {
-            console.log("click cancel");
-            deletePost(props.id);
-        } else {
-            setIsEditing(false);
-        }
+        await updatePost({id,formData})
+        setIsEditing(false)
     };
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
         if (e.key === "Enter") {
-            handleEdit();
+            handleEdit(e);
         }
     };
     const handleHidenItem = () => {
         setIsHidenNodeItem(!isHidenNodeItem);
         console.log(isHidenNodeItem);
     };
-    const onSubmit = (e) => {
-        e.preventDefault();
-        props.addPost(formData);
-        setFormData({
-            title: "",
-            content: "",
-            date: 0,
-            offsetY: 0,
-        });
-    };
+    
     const onChange = (e) =>
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
-            // offsetY: props.offsetY,
+    
         });
     return (
         <Fragment>
@@ -136,8 +74,8 @@ const NodeItem = (props) => {
                             <input
                                 className={styles["edit-item"]}
                                 type="text"
-                                name="title"
-                                value={title}
+                                name="editedTitle"
+                                value={editedTitle}
                                 // onChange={(e) =>
                                 //     setEditedTitle(e.target.value)
                                 // }
@@ -148,8 +86,8 @@ const NodeItem = (props) => {
                             Content:
                             <input
                                 className={styles["edit-item"]}
-                                value={content}
-                                name="content"
+                                value={editedContent}
+                                name="editedContent"
                                 onChange={(e) => onChange(e)}
                                 onKeyDown={handleKeyDown}
                             />
@@ -160,21 +98,22 @@ const NodeItem = (props) => {
                             <input
                                 placeholder="Day: "
                                 type="number"
-                                onChange={(e) =>
-                                    setEditedDate(parseInt(e.target.value))
-                                }
+                                // onChange={(e) =>
+                                //     setEditedDate(parseInt(e.target.value))
+                                // }
                             />
                         </span>
                         <a
                             className={styles["save-btn"]}
-                            //  onClick={handleEdit}
+                             onClick={handleEdit}
                         >
                             Save
                         </a>
                         <a
                             className={styles["cancel-btn"]}
-                            onClick={()=>{
-                                deletePost(id)
+                            onClick={async (e) => {
+                                e.preventDefault();
+                                await deletePost(id);
                             }}
                         >
                             Cancel
@@ -188,7 +127,10 @@ const NodeItem = (props) => {
                             <p>{props.content}</p>
                             <a onClick={() => setIsEditing(true)}>Edit &gt;</a>
                             <a
-                                onClick={() => props.handleDelete(props.id)}
+                                onClick={async (e) => {
+                                    e.preventDefault();
+                                    await deletePost(id);
+                                }}
                                 className={styles["delete-btn"]}
                             >
                                 Delete
@@ -218,4 +160,4 @@ NodeItem.propTypes = {
     addPost: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addPost,deletePost })(NodeItem);
+export default connect(null, { addPost, deletePost,updatePost })(NodeItem);

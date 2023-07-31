@@ -19,5 +19,5 @@ use App\Http\Controllers\PostController;
 // }); 
 Route::post('/post',[PostController::class, 'store']);
 Route::get('/posts',[PostController::class,'index']);
-Route::delete('/post/{post}',[PostController::class,'delete']);
-Route::put('/post/{postId}/{updatedPost}',[PostController::class,'update']);
+Route::delete('/post/{postId}',[PostController::class,'delete']);
+Route::put('/post/{postId}',[PostController::class,'update']);
