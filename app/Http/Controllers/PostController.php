@@ -16,8 +16,17 @@ class PostController extends Controller
     public function store(Request $request){
         // dd($request);
         $input = $request->all();
+        
         // dd($input);
-        $post = Post::create($input);
+        // // $post = Post::create($input);
+
+        $post = Post::create([
+            'title' => '',
+            'content' => '',
+            'date' => $input['date'],
+            'offsetY' => $input['offsetY']
+        ]);
+
         return response()->json($post);
     }
     public function delete($postId)
@@ -28,21 +37,23 @@ class PostController extends Controller
     public function update($postId, Request $request)
     {
         $item = Post::find($postId);
-
         if (!$item) {
             return response()->json(['message' => 'item not found'], 404);
         }
-
         $validatedData = $request->validate([
         'editedTitle' => 'required|string|max:255',
         'editedContent' => 'required|string',
+        'editedDate' => 'numeric',
+        // 'editedOffsetY' => 'numeric',
 
         // Các trường dữ liệu khác cần được xác thực nếu có
         ]);
         $item->title = $validatedData['editedTitle'];
         $item->content = $validatedData['editedContent'];
+        $item->date = $validatedData['editedDate'];
+        // $item->offsetY = $validatedData['editedOffsetY'];
         $item->save();
-
+        // dd($item);
         return response()->json($item);
     }
 }

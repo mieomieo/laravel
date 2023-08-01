@@ -23,25 +23,33 @@ export default function (state = initialState, action) {
                 // loading:false
             };
         case ADD_POST:
+            // console.log("payload create:",payload);
+
             return {
                 ...state,
                 posts: [...state.posts, payload],
                 // loading:false
             };
         case DELETE_POST:
+            // console.log("payload delete:",payload);
+            
             return {
                 ...state,
                 posts: state.posts.filter((post) => post.id !== payload),
                 // loading:false
             };
         case UPDATE_POST:
+            console.log("reducer UPDATE");
+            console.log("redux state:",payload);
+            
             const index = state.posts.findIndex(
-                (post) => post.id === payload.postId
+                (post) => post.id === payload.id
             );
             const newArr = [...state.posts];
-            // newArr[index] = payload.updatedPost;
+            newArr[index] = payload;
             return {
                 ...state,
+                posts: newArr
             };
         default:
             return state;

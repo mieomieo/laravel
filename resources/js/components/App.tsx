@@ -17,8 +17,7 @@ function App() {
         <>
             <Provider store={store}>
                 <TimelineList></TimelineList>
-                <PostForm />
-                <Posts />
+     
             </Provider>
         </>
     );

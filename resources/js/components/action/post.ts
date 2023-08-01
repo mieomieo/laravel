@@ -58,7 +58,8 @@ export const updatePost = (postId, formData) => async (dispatch) => {
     };
     try {
         const res = await axios.put(`/api/post/${postId}`, formData, config);
-
+        console.log("response update:",res.data);
+        
         dispatch({
             type: UPDATE_POST,
             payload: res.data,

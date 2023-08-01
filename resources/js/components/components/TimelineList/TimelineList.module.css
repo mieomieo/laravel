@@ -334,7 +334,7 @@ ul li .date input {
     }
 
     .container ul li:nth-child(odd) .date {
-        left: 20px;
+        right: 20px;
     }
 
     .container ul li:nth-child(odd) .circle {

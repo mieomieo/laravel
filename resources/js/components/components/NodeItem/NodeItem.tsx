@@ -14,20 +14,23 @@ export type NodeItemPropsType = {
         offsetY: number;
     };
 };
-// export type NodeItemPayload = {
-//     editedTitle: string;
-//     handleEdit;
-//     editedContent: string;
-//     editedDate: number | undefined;
-//     editedOffsetY: number | undefined;
-// };
 
 const NodeItem = (props) => {
     // console.log("item props:", props);
 
-    const { updatePost, addPost, deletePost } = props;
-    const { id, content, title, offsetY } = props.data;
-    const [isEditing, setIsEditing] = useState(true);
+    const { updatePost, addPost, deletePost, isFirstLoad } = props;
+    const { id, content, title, offsetY, date } = props.data;
+    const [isEditing, setIsEditing] = useState(false);
+    console.log("title:", title);
+
+    useEffect(() => {
+        // Khi isEditing thay đổi, ta kiểm tra nếu title rỗng, thì đặt isEditing thành true
+        if (props.data.title === "") {
+            setIsEditing(true);
+        } else {
+            setIsEditing(false);
+        }
+    }, []);
     const [isEditedOffsetY, setIsEditedOffsetY] = useState<boolean>(false);
     const [isHidenNodeItem, setIsHidenNodeItem] = useState<boolean>(false);
 
@@ -37,19 +40,13 @@ const NodeItem = (props) => {
         editedDate: undefined,
         editedOffsetY: undefined,
     });
-    // useEffect(() => {
-    //     console.log("run get post");
 
-    //     getPosts();
-    // }, [getPosts]);
     const { editedTitle, editedContent, editedDate, editedOffsetY } = formData;
-    const handleEdit = (e) => {
+    const handleEdit = async (e) => {
         e.preventDefault();
-        console.log("formData:", formData);
-
-        updatePost(id, formData);
-        console.log("await update");
-
+        // console.log("formData:", formData);
+        await updatePost(id, formData);
+        // console.log("await update");
         setIsEditing(false);
     };
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
@@ -67,6 +64,10 @@ const NodeItem = (props) => {
             ...formData,
             [e.target.name]: e.target.value,
         });
+    const handleDelete = async (e) => {
+        e.preventDefault();
+        await deletePost(id);
+    };
     return (
         <Fragment>
             <li
@@ -87,9 +88,6 @@ const NodeItem = (props) => {
                                 type="text"
                                 name="editedTitle"
                                 value={editedTitle}
-                                // onChange={(e) =>
-                                //     setEditedTitle(e.target.value)
-                                // }
                                 onChange={(e) => onChange(e)}
                             />
                         </div>
@@ -109,9 +107,7 @@ const NodeItem = (props) => {
                             <input
                                 placeholder="Day: "
                                 type="number"
-                                // onChange={(e) =>
-                                //     setEditedDate(parseInt(e.target.value))
-                                // }
+                                onChange={(e) => onChange(e)}
                             />
                         </span>
                         <a className={styles["save-btn"]} onClick={handleEdit}>
@@ -119,10 +115,7 @@ const NodeItem = (props) => {
                         </a>
                         <a
                             className={styles["cancel-btn"]}
-                            onClick={async (e) => {
-                                e.preventDefault();
-                                await deletePost(id);
-                            }}
+                            onClick={() => setIsEditing(false)}
                         >
                             Cancel
                         </a>
@@ -135,21 +128,17 @@ const NodeItem = (props) => {
                             <p>{content}</p>
                             <a onClick={() => setIsEditing(true)}>Edit &gt;</a>
                             <a
-                                onClick={async (e) => {
-                                    e.preventDefault();
-                                    await deletePost(id);
-                                }}
+                                onClick={handleDelete}
                                 className={styles["delete-btn"]}
                             >
                                 Delete
                             </a>
                             <span className={styles.line}></span>
                             <span className={styles.date}>
-                                Day:{" "}
+                                Day:{date}
                                 {isEditedOffsetY ? editedDate : props.createAt}
                             </span>
                         </div>
-
                         <span
                             style={{ display: "block !important" }}
                             onClick={handleHidenItem}
@@ -161,9 +150,7 @@ const NodeItem = (props) => {
         </Fragment>
     );
 };
-const mapStateToProps = (state) => ({
-    post: state.post,
-});
+
 NodeItem.propTypes = {
     addPost: PropTypes.func.isRequired,
 };

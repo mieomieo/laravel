@@ -7,17 +7,11 @@ import { connect } from "react-redux";
 import { addPost, deletePost, getPosts } from "../../action/post";
 import PropTypes from "prop-types";
 
-// function TimelineList({ post: { posts }, addPost }) {
 function TimelineList(props) {
-    // useEffect(() => {
-    //     console.log("render");
-
-    //     getPosts();
-    // }, [posts]);
-    const { addPost, deletePost, getPosts } = props;
+ 
+        console.log("render");
+    const { addPost } = props;
     const { posts } = props.post;
-
-    console.log("re-render:", posts);
     const [heightOfTimeLine, setHeightOfTimeLine] = useState(1000);
     //useRef
     const timeLineRef = useRef<HTMLDivElement>(null);
@@ -36,8 +30,9 @@ function TimelineList(props) {
         const logPercent = Math.floor((y / offSetHeightOfTarget) * 100);
         const day = Math.floor((1095 * logPercent) / 100);
 
-        await addPost({ title: "3", content: "aa", date: day, offsetY: y });
+        await addPost({ title: "", content: "", date: day, offsetY: y });
         console.log("await");
+   
     };
 
     return (
@@ -49,11 +44,13 @@ function TimelineList(props) {
                         {posts.map((item) => (
                             <NodeItem
                                 key={item.id}
+                            
                                 data={{
                                     id: item.id,
                                     title: item.title,
                                     content: item.content,
                                     offsetY: item.offsetY,
+                                    date: item.date
                                 }}
                             />
                         ))}
@@ -77,4 +74,4 @@ TimelineList.propTypes = {
 const mapStateToProps = (state) => ({
     post: state.post,
 });
-export default connect(mapStateToProps, { addPost, getPosts })(TimelineList);
+export default connect(mapStateToProps, { addPost})(TimelineList);
