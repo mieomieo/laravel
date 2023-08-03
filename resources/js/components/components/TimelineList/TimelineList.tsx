@@ -29,12 +29,9 @@ function TimelineList(props) {
         const offSetHeightOfTarget = e.currentTarget.offsetHeight;
         const logPercent = Math.floor((y / offSetHeightOfTarget) * 100);
         const day = Math.floor((1095 * logPercent) / 100);
-
         await addPost({ title: "", content: "", date: day, offsetY: y });
         console.log("await");
-   
     };
-
     return (
         <>
             <div className={styles.main}>

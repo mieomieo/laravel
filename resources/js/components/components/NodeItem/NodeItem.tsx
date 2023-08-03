@@ -37,8 +37,8 @@ const NodeItem = (props) => {
     const [formData, setFormData] = useState({
         editedTitle: "",
         editedContent: "",
-        editedDate: undefined,
-        editedOffsetY: undefined,
+        editedDate: 0,
+        editedOffsetY: 0,
     });
 
     const { editedTitle, editedContent, editedDate, editedOffsetY } = formData;
@@ -59,11 +59,13 @@ const NodeItem = (props) => {
         console.log(isHidenNodeItem);
     };
 
-    const onChange = (e) =>
+    const onChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
         });
+    };
+
     const handleDelete = async (e) => {
         e.preventDefault();
         await deletePost(id);
@@ -107,6 +109,7 @@ const NodeItem = (props) => {
                             <input
                                 placeholder="Day: "
                                 type="number"
+                                name="editedDate"
                                 onChange={(e) => onChange(e)}
                             />
                         </span>

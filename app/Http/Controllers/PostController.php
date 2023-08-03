@@ -40,20 +40,33 @@ class PostController extends Controller
         if (!$item) {
             return response()->json(['message' => 'item not found'], 404);
         }
+        
         $validatedData = $request->validate([
         'editedTitle' => 'required|string|max:255',
         'editedContent' => 'required|string',
         'editedDate' => 'numeric',
-        // 'editedOffsetY' => 'numeric',
-
+        // 'editedOffsetY'=>'numeric'
         // Các trường dữ liệu khác cần được xác thực nếu có
-        ]);
-        $item->title = $validatedData['editedTitle'];
-        $item->content = $validatedData['editedContent'];
-        $item->date = $validatedData['editedDate'];
-        // $item->offsetY = $validatedData['editedOffsetY'];
-        $item->save();
-        // dd($item);
+    ]);
+    // 'editedOffsetY' => 'numeric',
+
+        try {
+            // Các dòng gán dữ liệu và lưu dữ liệu
+            $item->title = $validatedData['editedTitle'];
+            $item->content = $validatedData['editedContent'];
+            $item->date = $validatedData['editedDate'];
+            // $item->offsetY = $validatedData['editedOffsetY'];
+            $item->save();
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+            
+            
+        }
+        // $item->content = $validatedData['editedContent'];
+        // // $item->date = $validatedData['editedDate'];
+        // // $item->offsetY = $validatedData['editedOffsetY'];
+        // $item->save();
+
         return response()->json($item);
     }
 }
