@@ -113,8 +113,12 @@
 }
 
 .edit-container {
+    cursor: pointer;
     position: relative;
     height: 100%;
+}
+.edit-btn{
+    cursor: pointer;
 }
 
 .edit-item {
@@ -127,6 +131,7 @@
 }
 
 .save-btn {
+    cursor: pointer;
     position: absolute;
     bottom: 10px;
     width: 80px;
@@ -140,6 +145,7 @@
 }
 
 .cancel-btn {
+    cursor: pointer;
     position: absolute;
     left: 110px;
     bottom: 10px;
@@ -290,6 +296,7 @@ ul li .date input {
     color: #fff;
     background-color: rgb(189, 90, 90);
     margin-left: 5px;
+    cursor: pointer;
 
 }
 

@@ -24,7 +24,7 @@ const NodeItem = (props) => {
     console.log("title:", title);
 
     useEffect(() => {
-        // Khi isEditing thay đổi, ta kiểm tra nếu title rỗng, thì đặt isEditing thành true
+ 
         if (props.data.title === "") {
             setIsEditing(true);
         } else {
@@ -129,7 +129,7 @@ const NodeItem = (props) => {
                             {/* <p>id:{props.id}</p> */}
                             <h3 className={styles.title}>{title}</h3>
                             <p>{content}</p>
-                            <a onClick={() => setIsEditing(true)}>Edit &gt;</a>
+                            <a className={styles["edit-btn"]} onClick={() => setIsEditing(true)}>Edit &gt;</a>
                             <a
                                 onClick={handleDelete}
                                 className={styles["delete-btn"]}
