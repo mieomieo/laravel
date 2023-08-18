@@ -1,17 +1,20 @@
 import styles from "./TimelineList.module.css";
-import { storage } from "../../fake";
+// import { storage } from "../../fake";
 import React, { useEffect, useState, MouseEventHandler, useRef } from "react";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import NodeItem, { NodeItemPayload } from "../NodeItem/NodeItem";
 import { connect } from "react-redux";
 import { addPost, deletePost, getPosts } from "../../action/post";
 import PropTypes from "prop-types";
+import { useSelector, useDispatch } from "react-redux";
 
 function TimelineList(props) {
+    const dispatch = useDispatch();
+    const posts = useSelector((state) => state.post.posts);
  
         console.log("render");
     const { addPost } = props;
-    const { posts } = props.post;
+    // const { posts } = props.post;
     const [heightOfTimeLine, setHeightOfTimeLine] = useState(1000);
     //useRef
     const timeLineRef = useRef<HTMLDivElement>(null);
@@ -71,4 +74,5 @@ TimelineList.propTypes = {
 const mapStateToProps = (state) => ({
     post: state.post,
 });
-export default connect(mapStateToProps, { addPost})(TimelineList);
+// export default connect(mapStateToProps, { addPost})(TimelineList);
+export default TimelineList;

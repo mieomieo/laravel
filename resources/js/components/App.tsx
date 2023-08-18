@@ -1,17 +1,18 @@
 import TimelineList from "./components/TimelineList/TimelineList";
 
-import React, { useState, useEffect } from "react";
-import PostForm from "./components/PostForm";
-import Posts from "./components/posts/Posts";
+import React, {  useEffect } from "react";
+
 import store from "./store";
 import { Provider } from "react-redux";
 import { getPosts } from "./action/post";
+import { useDispatch } from "react-redux";
 
 import "./App.css";
 function App() {
+    const dispatch = useDispatch();
     useEffect(() => {
-        store.dispatch(getPosts());
-        //  console.log('render App');
+        const res= store.dispatch(getPosts());
+        console.log('render App:',res);
     }, []);
     return (
         <>
