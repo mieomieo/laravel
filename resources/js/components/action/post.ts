@@ -1,95 +1,53 @@
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import {
-    GET_POSTS,
-    POST_ERROR,
-    ADD_POST,
-    DELETE_POST,
-    UPDATE_POST,
-} from "./type";
 
-export const getPosts = () => async (dispatch) => {
-    try {
-        const res = await axios.get("/api/posts");
-        dispatch({
-            type: GET_POSTS,
-            payload: res.data,
-        });
-    } catch (err) {
-        dispatch({
-            type: POST_ERROR,
-            payload: {
-                msg: err.response.statusText,
-                status: err.response.status,
+interface Post {
+    id: number;
+    title: string;
+    content: string;
+}
+
+export const getPosts = createAsyncThunk("timeline/getPosts", async () => {
+    const response = await axios.get("/api/posts");
+    // console.log("res:", response);
+
+    return response.data as Post[];
+});
+
+export const addPost = createAsyncThunk(
+    "timeline/addPost",
+    async (formData: any) => {
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
             },
-        });
+        };
+        const response = await axios.post("/api/post", formData, config);
+        return response.data as Post;
     }
-};
+);
 
-export const addPost = (formData) => async (dispatch) => {
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-        },
-    };
-    try {
-        const res = await axios.post("/api/post", formData, config);
-
-        dispatch({
-            type: ADD_POST,
-            payload: res.data,
-        });
-    } catch (err) {
-        dispatch({
-            type: POST_ERROR,
-            payload: {
-                msg: err.response.statusText,
-                status: err.response.status,
+export const updatePost = createAsyncThunk(
+    "timeline/updatePost",
+    async ({ postId, formData }: { postId: number; formData: any }) => {
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
             },
-        });
+        };
+        const response = await axios.put(
+            `/api/post/${postId}`,
+            formData,
+            config
+        );
+        return response.data as Post;
     }
-};
-// update post
+);
 
-export const updatePost = (postId, formData) => async (dispatch) => {
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-        },
-    };
-    try {
-        const res = await axios.put(`/api/post/${postId}`, formData, config);
-        console.log("response update:",res.data);
-        
-        dispatch({
-            type: UPDATE_POST,
-            payload: res.data,
-        });
-    } catch (err) {
-        dispatch({
-            type: POST_ERROR,
-            payload: {
-                msg: err.response.statusText,
-                status: err.response.status,
-            },
-        });
-    }
-};
-//Delete Post
-
-export const deletePost = (postId) => async (dispatch) => {
-    try {
+export const deletePost = createAsyncThunk(
+    "timeline/deletePost",
+    async (postId: number) => {
         await axios.delete(`/api/post/${postId}`);
-        dispatch({
-            type: DELETE_POST,
-            payload: postId,
-        });
-    } catch (err) {
-        dispatch({
-            type: POST_ERROR,
-            payload: {
-                msg: err.response.statusText,
-                status: err.response.status,
-            },
-        });
+        return postId;
     }
-};
+);

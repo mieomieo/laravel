@@ -1,9 +1,7 @@
-import { storage } from "../../fake.js";
-import React, { useState, Fragment, useEffect } from "react";
 import styles from "../TimelineList/TimelineList.module.css";
-import { connect } from "react-redux";
-import { getPosts, addPost, deletePost, updatePost } from "../../action/post";
-import PropTypes from "prop-types";
+import React, { useState, Fragment, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { deletePost, updatePost } from "../../reducers/timelineSlice.js";
 
 export type NodeItemPropsType = {
     data: {
@@ -17,22 +15,18 @@ export type NodeItemPropsType = {
 
 const NodeItem = (props) => {
     // console.log("item props:", props);
-
-    const { updatePost, addPost, deletePost, isFirstLoad } = props;
+    const dispatch = useDispatch();
     const { id, content, title, offsetY, date } = props.data;
     const [isEditing, setIsEditing] = useState(false);
-    console.log("title:", title);
-
+    const [isEditedOffsetY, setIsEditedOffsetY] = useState<boolean>(false);
+    const [isHidenNodeItem, setIsHidenNodeItem] = useState<boolean>(false);
     useEffect(() => {
- 
         if (props.data.title === "") {
             setIsEditing(true);
         } else {
             setIsEditing(false);
         }
     }, []);
-    const [isEditedOffsetY, setIsEditedOffsetY] = useState<boolean>(false);
-    const [isHidenNodeItem, setIsHidenNodeItem] = useState<boolean>(false);
 
     const [formData, setFormData] = useState({
         editedTitle: "",
@@ -40,12 +34,12 @@ const NodeItem = (props) => {
         editedDate: 0,
         editedOffsetY: 0,
     });
-
     const { editedTitle, editedContent, editedDate, editedOffsetY } = formData;
+
     const handleEdit = async (e) => {
         e.preventDefault();
-        // console.log("formData:", formData);
-        await updatePost(id, formData);
+        console.log("formData:", formData);
+        dispatch(updatePost({ postId: id, formData }));
         // console.log("await update");
         setIsEditing(false);
     };
@@ -66,9 +60,9 @@ const NodeItem = (props) => {
         });
     };
 
-    const handleDelete = async (e) => {
+    const handleDelete = (e) => {
         e.preventDefault();
-        await deletePost(id);
+        dispatch(deletePost(id));
     };
     return (
         <Fragment>
@@ -129,7 +123,12 @@ const NodeItem = (props) => {
                             {/* <p>id:{props.id}</p> */}
                             <h3 className={styles.title}>{title}</h3>
                             <p>{content}</p>
-                            <a className={styles["edit-btn"]} onClick={() => setIsEditing(true)}>Edit &gt;</a>
+                            <a
+                                className={styles["edit-btn"]}
+                                onClick={() => setIsEditing(true)}
+                            >
+                                Edit &gt;
+                            </a>
                             <a
                                 onClick={handleDelete}
                                 className={styles["delete-btn"]}
@@ -154,8 +153,9 @@ const NodeItem = (props) => {
     );
 };
 
-NodeItem.propTypes = {
-    addPost: PropTypes.func.isRequired,
-};
+// NodeItem.propTypes = {
+//     addPost: PropTypes.func.isRequired,
+// };
 
-export default connect(null, { addPost, deletePost, updatePost })(NodeItem);
+// export default connect(null, { addPost, deletePost, updatePost })(NodeItem);
+export default NodeItem;

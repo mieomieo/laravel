@@ -16,7 +16,7 @@ class PostController extends Controller
     public function store(Request $request){
         // dd($request);
         $input = $request->all();
-        
+
         // dd($input);
         // // $post = Post::create($input);
 
@@ -40,7 +40,7 @@ class PostController extends Controller
         if (!$item) {
             return response()->json(['message' => 'item not found'], 404);
         }
-        
+
         $validatedData = $request->validate([
         'editedTitle' => 'required|string|max:255',
         'editedContent' => 'required|string',
@@ -56,11 +56,12 @@ class PostController extends Controller
             $item->content = $validatedData['editedContent'];
             $item->date = $validatedData['editedDate'];
             // $item->offsetY = $validatedData['editedOffsetY'];
+            // dd($item);
             $item->save();
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
-            
-            
+
+
         }
         // $item->content = $validatedData['editedContent'];
         // // $item->date = $validatedData['editedDate'];
