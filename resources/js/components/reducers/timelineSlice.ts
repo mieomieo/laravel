@@ -36,6 +36,9 @@ const timelineSlice = createSlice({
                 if (index !== -1) {
                     state.posts[index] = updatedPost;
                 }
+            })
+            .addCase(deletePost.fulfilled,(state,action)=>{
+              state.posts = state.posts.filter(post => post.id !== action.payload);
             });
     },
 });
